@@ -1,0 +1,49 @@
+# VibeGuard 默认规则配置
+# 在项目根目录放置 .vibeguard.yaml 可覆盖此默认配置
+
+# AI 模型配置
+model:
+  # 提供商: openai | ollama
+  provider: ollama
+  # OpenAI 及兼容 API 配置 (当 provider=openai 时生效)
+  # 支持任何兼容 OpenAI 协议的第三方服务，只需设置 baseUrl
+  openai:
+    model: gpt-4o-mini
+    # 通过环境变量 OPENAI_API_KEY 设置 API Key (也可直接在此处填写)
+    # apiKey: sk-xxx
+    # 不设置 baseUrl 时默认使用 OpenAI 官方 API
+    # 第三方兼容服务示例:
+    # baseUrl: https://api.deepseek.com       # DeepSeek
+    # baseUrl: https://api.moonshot.cn/v1     # Moonshot / Kimi
+    # baseUrl: https://api.openai-proxy.com   # 任意 OpenAI 兼容代理
+  # Ollama 配置 (当 provider=ollama 时生效)
+  ollama:
+    model: llama3
+    baseUrl: http://localhost:11434
+
+# 扫描配置
+scan:
+  # 最大 diff 字符数，超出部分将被切片处理
+  maxDiffChars: 12000
+  # 是否启用语义幻觉检测
+  hallucinationDetection: true
+  # 是否启用安全扫描
+  securityScan: true
+  # 超时时间 (秒)
+  timeout: 30
+
+# 架构禁令规则 (示例)
+rules:
+  # 禁止使用的库
+  bannedImports:
+    - lodash.get
+    - request
+  # 禁止的模式
+  bannedPatterns:
+    - "eval("
+    - "new Function("
+  # 允许跳过的文件路径 (glob 模式)
+  ignorePaths:
+    - "dist/**"
+    - "node_modules/**"
+    - "*.min.js"
